@@ -1,21 +1,22 @@
-'use client';
+"use client";
 
-import React from "react"
+import React from "react";
+const area = process.env.NEXT_PUBLIC_AREA;
 
-import { BankLogo } from '@/components/BankLogo';
-import { Button } from '@/components/ui/button';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
+import { BankLogo } from "@/components/BankLogo";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Login() {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    email: 'john@example.com',
-    password: 'hashed_password_1',
+    email: "john@example.com",
+    password: "hashed_password_1",
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -27,12 +28,12 @@ export default function Login() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
@@ -40,19 +41,19 @@ export default function Login() {
 
       if (response.ok && data.success) {
         // Store user in localStorage for session management
-        localStorage.setItem('user', JSON.stringify(data.user));
+        localStorage.setItem("user", JSON.stringify(data.user));
 
         // Redirect based on role
-        if (data.user.role === 'admin') {
-          router.push('/admin/dashboard');
+        if (data.user.role === "admin") {
+          router.push("/admin/dashboard");
         } else {
-          router.push('/dashboard');
+          router.push("/dashboard");
         }
       } else {
-        setError(data.error || 'Invalid email or password');
+        setError(data.error || "Invalid email or password");
       }
     } catch (error) {
-      setError('Login failed. Please try again.');
+      setError("Login failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -65,7 +66,9 @@ export default function Login() {
           {/* Logo */}
           <div className="flex justify-center mb-8">
             <div className="w-16 h-16 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-2xl">PT</span>
+              <span className="text-primary-foreground font-bold text-2xl">
+                PT
+              </span>
             </div>
           </div>
 
@@ -114,54 +117,64 @@ export default function Login() {
               disabled={loading}
               className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
             >
-              {loading ? 'Logging in...' : 'Login'}
+              {loading ? "Logging in..." : "Login"}
             </Button>
 
             <p className="text-center text-sm text-muted-foreground mt-4">
-              Don't have an account?{' '}
-              <Link href="/signup" className="text-primary font-bold hover:underline">
+              Don't have an account?{" "}
+              <Link
+                href="/signup"
+                className="text-primary font-bold hover:underline"
+              >
                 Sign Up
               </Link>
             </p>
           </form>
 
-          <div className="mt-6 pt-6 border-t border-border text-center">
-            <p className="text-sm text-muted-foreground mb-2">
-              Demo credentials:
-            </p>
-            <div className="space-y-1">
-               <p className="text-[10px] text-muted-foreground font-mono">User: john@example.com / hashed_password_1</p>
-               <p className="text-[10px] text-muted-foreground font-mono">Admin: admin@bank.com / admin_password</p>
-            </div>
-          </div>
-
-          {/* Quick Login Buttons */}
-          <div className="mt-6 space-y-2">
-            <Button
-              onClick={() => {
-                setFormData({
-                  email: 'john@example.com',
-                  password: 'hashed_password_1',
-                });
-              }}
-              variant="outline"
-              className="w-full border-primary text-primary hover:bg-primary/10"
-            >
-              Set John (User)
-            </Button>
-            <Button
-              onClick={() => {
-                setFormData({
-                  email: 'admin@bank.com',
-                  password: 'admin_password',
-                });
-              }}
-              variant="outline"
-              className="w-full border-primary text-primary hover:bg-primary/10"
-            >
-              Set Admin
-            </Button>
-          </div>
+          {process.env.NEXT_PUBLIC_AREA === "development" && (
+            <>
+              <div className="mt-6 pt-6 border-t border-border text-center">
+                <p className="text-sm text-muted-foreground mb-2">
+                  Demo credentials:
+                </p>
+                <div className="space-y-1">
+                  <p className="text-[10px] text-muted-foreground font-mono">
+                    User: john@example.com / hashed_password_1
+                  </p>
+                  <p className="text-[10px] text-muted-foreground font-mono">
+                    Admin: admin@bank.com / admin_password
+                  </p>
+                </div>
+              </div>
+              {/* Quick Login Buttons */}
+              <div className="mt-6 space-y-2">
+                <Button
+                  onClick={() => {
+                    setFormData({
+                      email: "john@example.com",
+                      password: "hashed_password_1",
+                    });
+                  }}
+                  variant="outline"
+                  className="w-full border-primary text-primary hover:bg-primary/10"
+                >
+                  Set John (User)
+                </Button>
+                <Button
+                  onClick={() => {
+                    setFormData({
+                      email: "admin@bank.com",
+                      password: "admin_password",
+                    });
+                  }}
+                  variant="outline"
+                  className="w-full border-primary text-primary hover:bg-primary/10"
+                >
+                  Set Admin
+                </Button>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

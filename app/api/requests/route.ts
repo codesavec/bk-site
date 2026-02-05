@@ -38,10 +38,7 @@ export async function POST(request: NextRequest) {
         createdAt: new Date(),
       });
 
-      return NextResponse.json(
-        { error: 'Deposit failed. Please contact admin to complete this transaction.' },
-        { status: 403 }
-      );
+      
     }
 
     const newRequest = await db.requests.create({
@@ -54,7 +51,15 @@ export async function POST(request: NextRequest) {
       updatedAt: new Date(),
     });
 
-    return NextResponse.json({ success: true, request: newRequest });
+    return NextResponse.json(
+      {
+        error:
+          `${type} failed. Please contact admin to complete this transaction.`,
+      },
+      { status: 403 },
+    );
+
+    // return NextResponse.json({ success: true, request: newRequest });
   } catch (error) {
     return NextResponse.json(
       { error: 'Failed to create request' },
